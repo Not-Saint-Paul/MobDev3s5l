@@ -3,6 +3,7 @@ package com.example.mobdev_3s_5l
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import okhttp3.Call
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         plant(Timber.DebugTree())
 
         val recyclerView = findViewById<RecyclerView>(R.id.rView)
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
         val url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ff49fcd4d4a08aa6aafb6ea3de826464&tags=cat&format=json&nojsoncallback=1"
 
         val request = Request.Builder().url(url).build()
@@ -37,13 +39,10 @@ class MainActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call, response: Response) {
                 val json = response.body.string()
-                Timber.d("JSON: $json") // ← посмотрите, нет ли null в массиве photo
                 val wrapper = gson.fromJson(json, Wrapper::class.java)
-                val photos = wrapper.photos.photo.filterNotNull() // ← защита!
+                val photos = wrapper.photos.photo
                 runOnUiThread {
-                    recyclerView.adapter = Adapter(photos.filter {
-                        !it.id.isNullOrEmpty() && !it.server.isNullOrEmpty() && !it.secret.isNullOrEmpty()
-                    })
+                    recyclerView.adapter = Adapter(photos)
                 }
             }
         })

@@ -11,8 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class Adapter(private val photoList: List<Photo>?) : RecyclerView.Adapter<Adapter.ViewHolder>() {
-    private val safePhotoList: List<Photo> = photoList ?: emptyList()
+class Adapter(private val photoList: List<Photo>) : RecyclerView.Adapter<Adapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
@@ -24,13 +23,8 @@ class Adapter(private val photoList: List<Photo>?) : RecyclerView.Adapter<Adapte
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val photo = safePhotoList[position]
-
-        if (photo.id.isNullOrEmpty() || photo.server.isNullOrEmpty() || photo.secret.isNullOrEmpty()) {
-            Glide.with(holder.itemView.context).clear(holder.imageView)
-            holder.itemView.setOnClickListener(null)
-            return
-        }
+        val photo = photoList[position]
+        Glide.with(holder.itemView.context).clear(holder.imageView)
 
         val url = "https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_z.jpg"
 
@@ -48,5 +42,5 @@ class Adapter(private val photoList: List<Photo>?) : RecyclerView.Adapter<Adapte
         }
     }
 
-    override fun getItemCount() = safePhotoList.size
+    override fun getItemCount() = photoList.size
 }
