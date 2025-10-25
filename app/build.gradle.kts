@@ -17,7 +17,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
+        create("customDebugType") {
+            isDebuggable = true
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -37,6 +42,10 @@ android {
 
 dependencies {
 
+    implementation(libs.timber)
+    implementation(libs.gson)
+    implementation(libs.okhttp)
+    implementation(libs.glide)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
